@@ -1,7 +1,6 @@
 #include <Audio.h>
 #include "Harmonizer.h" 
 
-
 Harmonizer harmonizer;
 AudioInputI2S in; // input of audio shield 
 AudioOutputI2S out; // output of audio shield
@@ -12,9 +11,7 @@ AudioConnection patchChord1 (harmonizer, 0, out, 0);
 
 int stepVals[] = { 78, 156, 234, 312, 390, 468, 546, 624, 702, 780, 858, 936, 1023 };
 int inputValsUp[] = {12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
-//int inputValsUp[] = {0, 1, 2, 3, 4, 5 ,6 ,7, 8, 9, 10, 11, 12};
 int inputValsUp2[] = {24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12};
-//int inputValsUp2[] = {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
 int inputValsDown[] = {0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12};
 
 bool once = true;
@@ -65,9 +62,22 @@ void loop() {
   else {
         once = true;
   }
-  delay(100);
+  delay(10);
 }
 
+int KnobReturn1(int sensor, int valRange[], int returnVals[]){
+  for (int i = 0; i < sizeof(valRange); i++){
+    if (sensor < valRange[i]){
+      return returnVals[i];
+    }
+    else if (valRange[i] <= sensor & sensor < valRange[i++]){
+      return returnVals[i++];
+    }
+    else if (valRange[i] < sensor & sensor <= valRange[i++]){
+      return returnVals[i++];
+    }
+  }
+}
 
 int KnobReturn(int sensor, int valRange[], int returnVals[]){
   if (sensor < valRange[0]){
@@ -143,34 +153,6 @@ void check4ChangeLV(int value){
     Serial.println(value);
   }
 }
-//
-//void check4ChangeWD(float value){
-//  if (change){
-//    if (holdWacky == 1025){
-//      holdWacky = value;
-//    }
-//    else if (holdWacky != value){
-//        holdWacky = value;
-//        harmonizer.setParamValue("Wacky", value*0.01); 
-//        Serial.println(value);
-//      }
-//    }
-//  else {
-//    if (holdWD == 1025){
-//      holdWD = value;
-//    }
-//    else if (holdWD != value){
-//       if (value == 0.0){
-//        holdWD = 1.0;
-//      }
-//      else{
-//        holdWD = value;
-//        harmonizer.setParamValue("Wet/Dry", value*0.01); 
-//        Serial.println(value);
-//      }
-//    }
-//  }   
-//}
 
 void check4ChangeWD(int value){
   if (holdWD == 1025){
